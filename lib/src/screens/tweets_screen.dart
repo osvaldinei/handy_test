@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:handy_test/src/model/tweet_dto.dart';
+import 'package:handy_test/src/screens/card_tweet.dart';
 import 'package:handy_test/src/service/tweet_service.dart';
 import 'package:handy_test/src/style/theme.dart' as Theme;
 
@@ -147,6 +148,9 @@ class _TweetsScreenState extends State<TweetsScreen> {
           ));
         } else {
           final TweetDto tweetDto = snapshot.data;
+          print(tweetDto.tweet.length);
+
+          return CardTweet(tweetDto);
         }
       },
     );
