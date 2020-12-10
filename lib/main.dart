@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:handy_test/screens/splash_screen.dart';
-import 'package:handy_test/screens/wellcome_page.dart';
+import 'package:handy_test/screens/tweets_screen.dart';
+import 'package:handy_test/screens/wellcome_screen.dart';
 
 
 void main() {
@@ -12,7 +13,8 @@ void main() {
       debugShowCheckedModeBanner: false,
     home: new SplashScreen(),
     routes: <String, WidgetBuilder>{
-       WellcomePage.tag: (context) => WellcomePage(),
+       WellcomeScreen.tag: (context) => WellcomeScreen(),
+       TweetsScreen.tag: (context) => TweetsScreen(),
     },
   ));
 }

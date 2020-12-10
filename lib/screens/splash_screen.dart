@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:handy_test/screens/wellcome_page.dart';
+import 'package:handy_test/screens/wellcome_screen.dart';
 import 'package:handy_test/src/style/theme.dart' as Theme;
 
 class SplashScreen extends StatefulWidget {
@@ -22,7 +22,7 @@ class _SplashScreenState extends State<SplashScreen> {
   }
 
   void navigationPage() {
-    Navigator.of(context).pushReplacementNamed(WellcomePage.tag);
+    Navigator.of(context).pushReplacementNamed(WellcomeScreen.tag);
   }
 
   @override
@@ -59,7 +59,7 @@ class _SplashScreenState extends State<SplashScreen> {
                       'assets/img/logo.png',
                       fit: BoxFit.fitWidth,
                     ),
-                   Text("Ironics Theets",style: TextStyle(
+                   Text("Ironics Tweets",style: TextStyle(
                       color: Colors.white,
                       fontWeight: FontWeight.bold,
                       fontSize: 18.0,

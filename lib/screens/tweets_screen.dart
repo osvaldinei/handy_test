@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
-class WellcomePage extends StatelessWidget {
-  static String tag = '/WellcomePage';
-  WellcomePage({Key key}) : super(key: key);
+class TweetsScreen extends StatelessWidget {
+  static String tag = '/TweetsScreen';
+  TweetsScreen({Key key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
