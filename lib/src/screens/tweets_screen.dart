@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:handy_test/src/model/tweet.dart';
 import 'package:handy_test/src/model/tweet_dto.dart';
 import 'package:handy_test/src/screens/card_tweet.dart';
 import 'package:handy_test/src/service/tweet_service.dart';
@@ -16,6 +17,11 @@ class TweetsScreen extends StatefulWidget {
 }
 
 class _TweetsScreenState extends State<TweetsScreen> {
+  TextEditingController editingController = TextEditingController();
+  List<Tweet> tweets;
+  TweetDto tweetDto;
+  bool queryNull = true;
+
   @override
   void initState() {
     super.initState();
@@ -50,7 +56,42 @@ class _TweetsScreenState extends State<TweetsScreen> {
             ),
           ),
           _tweetsWidget(),
-        ])
+        ]),
+        Positioned(
+            bottom: 0.2,
+            left: 0.0,
+            child: Container(
+                height: MediaQuery.of(context).size.height * 0.10,
+                width: MediaQuery.of(context).size.width * 0.95,
+                color: Colors.transparent,
+                margin: new EdgeInsets.only(left: 10, right: 10),
+                child: Row(children: [
+                  Container(
+                    color: Colors.transparent,
+                    width: MediaQuery.of(context).size.width * 0.60,
+                    padding: EdgeInsets.all(15),
+                    child: TextField(
+                      onChanged: (value) {
+                        filterSearchResults(value);
+                      },
+                      controller: editingController,
+                      decoration: InputDecoration(
+                          filled: true,
+                          fillColor: Colors.white,
+                          hintText: "Procurar",
+                          prefixIcon: Icon(Icons.search),
+                          border: OutlineInputBorder(
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(25.0)))),
+                    ),
+                  ),
+                  Container(
+                      color: Colors.transparent,
+                      width: MediaQuery.of(context).size.width * 0.30,
+                      padding: EdgeInsets.all(15),
+                      child: Icon(Icons.calendar_today,
+                          color: Colors.blueGrey[800]))
+                ]))),
       ],
     ));
   }
@@ -147,12 +188,46 @@ class _TweetsScreenState extends State<TweetsScreen> {
                 valueColor: AlwaysStoppedAnimation<Color>(Colors.white)),
           ));
         } else {
-          final TweetDto tweetDto = snapshot.data;
+          if (queryNull == true) {
+            print(queryNull);
+            tweetDto = snapshot.data;
+            tweets = tweetDto.tweet;
+          } else {
+            print("Campo de busca não vazio");
+          }
+
           print(tweetDto.tweet.length);
 
           return CardTweet(tweetDto);
         }
       },
     );
+  }
+
+  ///Busca por palavras
+  void filterSearchResults(String query) {
+    List<Tweet> dummySearchList = List<Tweet>();
+    dummySearchList.addAll(tweets);
+
+    if (query.isNotEmpty) {
+      List<Tweet> dummyListData = List<Tweet>();
+
+      dummySearchList.forEach((item) {
+        if (item.text.toLowerCase().contains(query.toLowerCase())) {
+          dummyListData.add(item);
+        }
+      });
+
+      setState(() {
+        queryNull = false;
+        tweetDto.tweet.clear();
+        tweetDto.tweet.addAll(dummyListData);
+      });
+    } else {
+      setState(() {
+        queryNull = true;
+        tweetDto.tweet.clear();
+      });
+    }
   }
 }
