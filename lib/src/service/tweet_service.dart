@@ -21,6 +21,31 @@ class TweetService {
               'AAAAAAAAAAAAAAAAAAAAAJMCKgEAAAAAizacl82xUwDCJCmUJpC5kDcIJ1o%3DOtmSUl64tIYEzkZFcwWlKsvrBYp0Mu79GgwVhjrPZlwfKLo5JZ'
         }).timeout(const Duration(seconds: 10), onTimeout: () => _Timeout());
 
+    if (response.statusCode == 200) {
+      final TweetDto tweetDto =
+          TweetDto.fromJson(json.decode(utf8.decode(response.bodyBytes)));
+      return tweetDto;
+    } else {
+      throw Exception('Erro ao realizar busca por Tweet');
+    }
+  }
+
+  Future<TweetDto> getTweetDate(String startDate, String endDate) async {
+    print("StartDate " + startDate);
+    final response = await http.get(
+        'https://api.twitter.com/2/tweets/search/recent?query=from:realDonaldTrump&max_results=15&tweet.fields=author_id,created_at,lang,conversation_id,public_metrics,referenced_tweets&expansions=author_id&user.fields=name,id,description,profile_image_url' +
+            '&' +
+            'end_time=' +
+            endDate +
+            '&' +
+            'start_time=' +
+            startDate,
+        headers: {
+          "Authorization": "Bearer " +
+              'AAAAAAAAAAAAAAAAAAAAAJMCKgEAAAAAizacl82xUwDCJCmUJpC5kDcIJ1o%3DOtmSUl64tIYEzkZFcwWlKsvrBYp0Mu79GgwVhjrPZlwfKLo5JZ'
+        }).timeout(const Duration(seconds: 10), onTimeout: () => _Timeout());
+
+
     // print('Response getTweet: ' +
     //     response.statusCode.toString() +
     //     response.body.toString());
