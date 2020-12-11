@@ -4,6 +4,7 @@ import 'package:handy_test/src/model/tweet_dto.dart';
 import 'package:handy_test/src/screens/card_tweet.dart';
 import 'package:handy_test/src/service/tweet_service.dart';
 import 'package:handy_test/src/style/theme.dart' as Theme;
+import 'package:intl/intl.dart';
 
 class TweetsScreen extends StatefulWidget {
   static String tag = '/TweetsScreen';
@@ -21,6 +22,9 @@ class _TweetsScreenState extends State<TweetsScreen> {
   List<Tweet> tweets;
   TweetDto tweetDto;
   bool queryNull = true;
+  DateTime startDate;
+  DateTime endDate;
+  var formatterDate1 = new DateFormat('dd-MM-yyyy');
 
   @override
   void initState() {
@@ -59,16 +63,17 @@ class _TweetsScreenState extends State<TweetsScreen> {
         ]),
         Positioned(
             bottom: 0.2,
-            left: 0.0,
+            right: 0.0,
             child: Container(
                 height: MediaQuery.of(context).size.height * 0.10,
-                width: MediaQuery.of(context).size.width * 0.95,
+                width: MediaQuery.of(context).size.width * 0.60,
                 color: Colors.transparent,
                 margin: new EdgeInsets.only(left: 10, right: 10),
                 child: Row(children: [
+                  ///Container Search
                   Container(
                     color: Colors.transparent,
-                    width: MediaQuery.of(context).size.width * 0.60,
+                    width: MediaQuery.of(context).size.width * 0.50,
                     padding: EdgeInsets.all(15),
                     child: TextField(
                       onChanged: (value) {
@@ -85,26 +90,65 @@ class _TweetsScreenState extends State<TweetsScreen> {
                                   BorderRadius.all(Radius.circular(25.0)))),
                     ),
                   ),
-                  Container(
+
+                  ///Container Calendario
+                  GestureDetector(
+                    onTap: () => _selectDate(context),
+                    child: Container(
                       color: Colors.transparent,
-                      width: MediaQuery.of(context).size.width * 0.30,
-                      padding: EdgeInsets.all(15),
+                      width: MediaQuery.of(context).size.width * 0.10,
+                      padding: EdgeInsets.all(5),
                       child: Icon(Icons.calendar_today,
-                          color: Colors.blueGrey[800]))
+                          color: Colors.blueGrey[800]),
+                    ),
+                  )
                 ]))),
       ],
     ));
   }
 
+  _selectDate(BuildContext context) async {
+    final DateTime picked = await showDatePicker(
+      context: context,
+      initialDate: DateTime.now(),
+      firstDate: DateTime.now().subtract(new Duration(days: 6)),
+      lastDate: DateTime.now(),
+    );
+
+    if (picked != null)
+      setState(() {
+        print(DateFormat("yyyy-MM-dd'T'HH:mm:sss'Z'").format(picked));
+
+        startDate = DateTime.parse(
+            DateFormat("yyyy-MM-dd").format(picked) + " " + "00:00:00");
+        endDate = DateTime.parse(
+            DateFormat("yyyy-MM-dd").format(picked) + " " + "23:59:00");
+
+        print(startDate);
+        print(endDate);
+        print(DateFormat("yyyy-MM-dd'T'HH:mm:sss'Z'").format(startDate));
+      });
+  }
+
   Widget _tweetsWidget() {
     return FutureBuilder(
-      future: TweetService()
-          .getTweet()
-          .timeout(const Duration(seconds: 10))
-          .catchError((e) {
-        print(e.toString());
-        TweetsScreen.timeout = true;
-      }),
+      future: startDate != null && endDate != null && endDate.day < DateTime.now().day
+          ? TweetService()
+              .getTweetDate(
+                  DateFormat("yyyy-MM-dd'T'HH:mm:ss.sss'Z'").format(startDate),
+                  DateFormat("yyyy-MM-dd'T'HH:mm:ss.sss'Z'").format(endDate))
+              .timeout(const Duration(seconds: 10))
+              .catchError((e) {
+              print(e.toString());
+              TweetsScreen.timeout = true;
+            })
+          : TweetService()
+              .getTweet()
+              .timeout(const Duration(seconds: 10))
+              .catchError((e) {
+              print(e.toString());
+              TweetsScreen.timeout = true;
+            }),
       builder: (context, snapshot) {
         if (!snapshot.hasData && TweetsScreen.timeout) {
           print("!snapshot.hasData && timeout");
