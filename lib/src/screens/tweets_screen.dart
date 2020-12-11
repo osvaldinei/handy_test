@@ -117,16 +117,16 @@ class _TweetsScreenState extends State<TweetsScreen> {
 
     if (picked != null)
       setState(() {
-        print(DateFormat("yyyy-MM-dd'T'HH:mm:sss'Z'").format(picked));
+       // print(DateFormat("yyyy-MM-dd'T'HH:mm:sss'Z'").format(picked));
 
         startDate = DateTime.parse(
             DateFormat("yyyy-MM-dd").format(picked) + " " + "00:00:00");
         endDate = DateTime.parse(
             DateFormat("yyyy-MM-dd").format(picked) + " " + "23:59:00");
 
-        print(startDate);
-        print(endDate);
-        print(DateFormat("yyyy-MM-dd'T'HH:mm:sss'Z'").format(startDate));
+        // print(startDate);
+        // print(endDate);
+        // print(DateFormat("yyyy-MM-dd'T'HH:mm:sss'Z'").format(startDate));
       });
   }
 
